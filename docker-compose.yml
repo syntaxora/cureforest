@@ -1,12 +1,30 @@
 version: '3.8'
 
 services:
+  # Next.js Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cureforest-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-cureforest}:${POSTGRES_PASSWORD:-cureforest123}@postgres:5432/${POSTGRES_DB:-cureforest}
+      - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET:-cureforest-admin-secret-key-change-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # PostgreSQL Database (port 5433 to avoid conflicts)
   postgres:
     image: postgres:16-alpine
     container_name: cureforest-db
     restart: unless-stopped
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${DB_PORT:-5433}:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-cureforest}
       POSTGRES_USER: ${POSTGRES_USER:-cureforest}
