@@ -1,27 +1,27 @@
-import { query } from "@/lib/db";
+import { query } from "@/lib/db"
 
 export interface Schedule {
-  id: number;
-  program_id: number;
-  location_id: number;
-  schedule_date: Date;
-  start_time: string | null;
-  end_time: string | null;
-  max_capacity: number;
-  booked_count: number;
-  status: "open" | "full" | "cancelled";
-  created_at: Date;
-  updated_at: Date;
+  id: number
+  program_id: number
+  location_id: number
+  schedule_date: Date
+  start_time: string | null
+  end_time: string | null
+  max_capacity: number
+  booked_count: number
+  status: "open" | "full" | "cancelled"
+  created_at: Date
+  updated_at: Date
 }
 
 export interface ScheduleWithDetails extends Schedule {
-  program_title: string;
-  program_number: string;
-  location_name: string;
-  pending_count: number;
-  confirmed_count: number;
-  cancelled_count: number;
-  remaining_seats: number;
+  program_title: string
+  program_number: string
+  location_name: string
+  pending_count: number
+  confirmed_count: number
+  cancelled_count: number
+  remaining_seats: number
 }
 
 const SCHEDULE_BASE_QUERY = `
@@ -47,70 +47,70 @@ const SCHEDULE_BASE_QUERY = `
   FROM program_schedules ps
   JOIN programs p ON p.id = ps.program_id
   JOIN locations l ON l.id = ps.location_id
-`;
+`
 
 /**
  * Get all schedules with details (admin view)
  */
 export async function getAllSchedules(filters?: {
-  programTitle?: string;
-  status?: string;
-  search?: string;
-  limit?: number;
-  offset?: number;
+  programTitle?: string
+  status?: string
+  search?: string
+  limit?: number
+  offset?: number
 }): Promise<{ schedules: ScheduleWithDetails[]; total: number }> {
   try {
-    let conditions = " WHERE 1=1";
-    const params: unknown[] = [];
-    let paramIndex = 1;
+    let conditions = " WHERE 1=1"
+    const params: unknown[] = []
+    let paramIndex = 1
 
     if (filters?.status && filters.status !== "all") {
-      conditions += ` AND ps.status = $${paramIndex}`;
-      params.push(filters.status);
-      paramIndex++;
+      conditions += ` AND ps.status = $${paramIndex}`
+      params.push(filters.status)
+      paramIndex++
     }
 
     if (filters?.programTitle && filters.programTitle !== "all") {
-      conditions += ` AND p.title = $${paramIndex}`;
-      params.push(filters.programTitle);
-      paramIndex++;
+      conditions += ` AND p.title = $${paramIndex}`
+      params.push(filters.programTitle)
+      paramIndex++
     }
 
     if (filters?.search) {
-      const searchPattern = `%${filters.search}%`;
-      conditions += ` AND (p.title ILIKE $${paramIndex} OR l.name ILIKE $${paramIndex})`;
-      params.push(searchPattern);
-      paramIndex++;
+      const searchPattern = `%${filters.search}%`
+      conditions += ` AND (p.title ILIKE $${paramIndex} OR l.name ILIKE $${paramIndex})`
+      params.push(searchPattern)
+      paramIndex++
     }
 
-    const countSql = `SELECT COUNT(*) as total FROM program_schedules ps JOIN programs p ON p.id = ps.program_id JOIN locations l ON l.id = ps.location_id ${conditions}`;
-    let sql = `${SCHEDULE_BASE_QUERY} ${conditions} ORDER BY ps.schedule_date ASC, ps.start_time ASC`;
+    const countSql = `SELECT COUNT(*) as total FROM program_schedules ps JOIN programs p ON p.id = ps.program_id JOIN locations l ON l.id = ps.location_id ${conditions}`
+    let sql = `${SCHEDULE_BASE_QUERY} ${conditions} ORDER BY ps.schedule_date ASC, ps.start_time ASC`
 
-    const countParams = [...params];
+    const countParams = [...params]
 
     if (filters?.limit) {
-      sql += ` LIMIT $${paramIndex}`;
-      params.push(filters.limit);
-      paramIndex++;
+      sql += ` LIMIT $${paramIndex}`
+      params.push(filters.limit)
+      paramIndex++
     }
 
     if (filters?.offset) {
-      sql += ` OFFSET $${paramIndex}`;
-      params.push(filters.offset);
+      sql += ` OFFSET $${paramIndex}`
+      params.push(filters.offset)
     }
 
     const [dataResult, countResult] = await Promise.all([
       query<ScheduleWithDetails>(sql, params),
       query<{ total: string }>(countSql, countParams),
-    ]);
+    ])
 
     return {
       schedules: dataResult.rows,
       total: parseInt(countResult.rows[0]?.total || "0", 10),
-    };
+    }
   } catch (err) {
-    console.error("[DB] Get schedules error:", err);
-    return { schedules: [], total: 0 };
+    console.error("[DB] Get schedules error:", err)
+    return { schedules: [], total: 0 }
   }
 }
 
@@ -120,25 +120,25 @@ export async function getAllSchedules(filters?: {
 export async function createBulkSchedules(
   adminId: number,
   data: {
-    programId: number;
-    locationId: number;
-    startDate: Date;
-    endDate: Date;
-    startTime?: string;
-    endTime?: string;
-    maxCapacity?: number;
-    weekdaysOnly?: boolean;
-  },
+    programId: number
+    locationId: number
+    startDate: Date
+    endDate: Date
+    startTime?: string
+    endTime?: string
+    maxCapacity?: number
+    weekdaysOnly?: boolean
+  }
 ): Promise<number> {
   try {
-    let count = 0;
-    const currentDate = new Date(data.startDate);
-    const endDate = new Date(data.endDate);
-
+    let count = 0
+    const currentDate = new Date(data.startDate)
+    const endDate = new Date(data.endDate)
+    
     while (currentDate <= endDate) {
-      const dayOfWeek = currentDate.getDay();
-      const isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6;
-
+      const dayOfWeek = currentDate.getDay()
+      const isWeekday = dayOfWeek !== 0 && dayOfWeek !== 6
+      
       if (!data.weekdaysOnly || isWeekday) {
         await query(
           `INSERT INTO program_schedules (program_id, location_id, schedule_date, start_time, end_time, max_capacity)
@@ -151,24 +151,24 @@ export async function createBulkSchedules(
             data.startTime || "10:00",
             data.endTime || "12:00",
             data.maxCapacity || 20,
-          ],
-        );
-        count++;
+          ]
+        )
+        count++
       }
-      currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setDate(currentDate.getDate() + 1)
     }
-
+    
     // Audit log
     await query(
       `INSERT INTO admin_audit_log (admin_id, action, target_type, details)
        VALUES ($1, 'schedule.bulk_create', 'schedule', $2)`,
-      [adminId, JSON.stringify({ ...data, created_count: count })],
-    );
-
-    return count;
+      [adminId, JSON.stringify({ ...data, created_count: count })]
+    )
+    
+    return count
   } catch (err) {
-    console.error("[DB] Create bulk schedules error:", err);
-    return 0;
+    console.error("[DB] Create bulk schedules error:", err)
+    return 0
   }
 }
 
@@ -178,23 +178,23 @@ export async function createBulkSchedules(
 export async function updateScheduleCapacity(
   adminId: number,
   scheduleId: number,
-  newCapacity: number,
+  newCapacity: number
 ): Promise<boolean> {
   try {
     await query(
       `UPDATE program_schedules SET max_capacity = $1, updated_at = NOW() WHERE id = $2`,
-      [newCapacity, scheduleId],
-    );
-
+      [newCapacity, scheduleId]
+    )
+    
     await query(
       `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details)
        VALUES ($1, 'schedule.update_capacity', 'schedule', $2, $3)`,
-      [adminId, scheduleId, JSON.stringify({ new_capacity: newCapacity })],
-    );
-
-    return true;
+      [adminId, scheduleId, JSON.stringify({ new_capacity: newCapacity })]
+    )
+    
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 
@@ -206,17 +206,17 @@ export async function deleteSchedule(scheduleId: number): Promise<boolean> {
     // Only allow deletion if no reservations exist
     const checkResult = await query<{ count: string }>(
       `SELECT COUNT(*) as count FROM reservations WHERE schedule_id = $1`,
-      [scheduleId],
-    );
+      [scheduleId]
+    )
 
     if (parseInt(checkResult.rows[0]?.count || "0", 10) > 0) {
-      return false; // Cannot delete schedule with reservations
+      return false // Cannot delete schedule with reservations
     }
 
-    await query(`DELETE FROM program_schedules WHERE id = $1`, [scheduleId]);
-    return true;
+    await query(`DELETE FROM program_schedules WHERE id = $1`, [scheduleId])
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 
@@ -225,17 +225,12 @@ export async function deleteSchedule(scheduleId: number): Promise<boolean> {
  */
 export async function getAllPrograms() {
   try {
-    const result = await query<{
-      id: number;
-      slug: string;
-      title: string;
-      number: string;
-    }>(
-      `SELECT id, slug, title, number FROM programs WHERE is_active = true ORDER BY number`,
-    );
-    return result.rows;
+    const result = await query<{ id: number; slug: string; title: string; number: string }>(
+      `SELECT id, slug, title, number FROM programs WHERE is_active = true ORDER BY number`
+    )
+    return result.rows
   } catch {
-    return [];
+    return []
   }
 }
 
@@ -244,60 +239,59 @@ export async function getAllPrograms() {
  */
 export async function getDashboardStats() {
   try {
-    const today = new Date().toISOString().split("T")[0];
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    const monthStart = new Date();
-    monthStart.setDate(1);
+    const today = new Date().toISOString().split("T")[0]
+    const weekStart = new Date()
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+    const monthStart = new Date()
+    monthStart.setDate(1)
 
-    const [todayRes, weekRes, monthParticipants, conversionRate] =
-      await Promise.all([
-        // Today's reservations
-        query<{ count: string }>(
-          `SELECT COUNT(*) as count FROM reservations r
+    const [todayRes, weekRes, monthParticipants, conversionRate] = await Promise.all([
+      // Today's reservations
+      query<{ count: string }>(
+        `SELECT COUNT(*) as count FROM reservations r
          WHERE DATE(r.created_at) = $1`,
-          [today],
-        ),
-        // This week's schedules
-        query<{ count: string }>(
-          `SELECT COUNT(*) as count FROM program_schedules
+        [today]
+      ),
+      // This week's schedules
+      query<{ count: string }>(
+        `SELECT COUNT(*) as count FROM program_schedules
          WHERE schedule_date >= $1 AND schedule_date < $1::date + INTERVAL '7 days'`,
-          [weekStart.toISOString().split("T")[0]],
-        ),
-        // This month's participants
-        query<{ sum: string }>(
-          `SELECT COALESCE(SUM(participants), 0) as sum FROM reservations r
+        [weekStart.toISOString().split("T")[0]]
+      ),
+      // This month's participants
+      query<{ sum: string }>(
+        `SELECT COALESCE(SUM(participants), 0) as sum FROM reservations r
          WHERE r.status IN ('confirmed', 'completed')
          AND DATE(r.created_at) >= $1`,
-          [monthStart.toISOString().split("T")[0]],
-        ),
-        // Conversion rate (confirmed / total)
-        query<{ total: string; confirmed: string }>(
-          `SELECT 
+        [monthStart.toISOString().split("T")[0]]
+      ),
+      // Conversion rate (confirmed / total)
+      query<{ total: string; confirmed: string }>(
+        `SELECT 
           COUNT(*) as total,
           COUNT(*) FILTER (WHERE status IN ('confirmed', 'completed')) as confirmed
-         FROM reservations`,
-        ),
-      ]);
+         FROM reservations`
+      ),
+    ])
 
-    const total = parseInt(conversionRate.rows[0]?.total || "0", 10);
-    const confirmed = parseInt(conversionRate.rows[0]?.confirmed || "0", 10);
-    const rate = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+    const total = parseInt(conversionRate.rows[0]?.total || "0", 10)
+    const confirmed = parseInt(conversionRate.rows[0]?.confirmed || "0", 10)
+    const rate = total > 0 ? Math.round((confirmed / total) * 100) : 0
 
     return {
       todayReservations: parseInt(todayRes.rows[0]?.count || "0", 10),
       weekSchedules: parseInt(weekRes.rows[0]?.count || "0", 10),
       monthParticipants: parseInt(monthParticipants.rows[0]?.sum || "0", 10),
       conversionRate: rate,
-    };
+    }
   } catch (err) {
-    console.error("[DB] Get dashboard stats error:", err);
+    console.error("[DB] Get dashboard stats error:", err)
     return {
       todayReservations: 0,
       weekSchedules: 0,
       monthParticipants: 0,
       conversionRate: 0,
-    };
+    }
   }
 }
 
@@ -307,12 +301,12 @@ export async function getDashboardStats() {
 export async function getRecentReservations(limit = 5) {
   try {
     const result = await query<{
-      id: number;
-      name: string;
-      program_title: string;
-      date: string;
-      participants: number;
-      status: string;
+      id: number
+      name: string
+      program_title: string
+      date: string
+      participants: number
+      status: string
     }>(
       `SELECT 
         r.id,
@@ -326,11 +320,11 @@ export async function getRecentReservations(limit = 5) {
        JOIN programs p ON p.id = ps.program_id
        ORDER BY r.created_at DESC
        LIMIT $1`,
-      [limit],
-    );
-    return result.rows;
+      [limit]
+    )
+    return result.rows
   } catch {
-    return [];
+    return []
   }
 }
 
@@ -339,14 +333,14 @@ export async function getRecentReservations(limit = 5) {
  */
 export async function getUpcomingSchedules(limit = 4) {
   try {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0]
     const result = await query<{
-      id: number;
-      program_title: string;
-      location_name: string;
-      schedule_date: string;
-      reserved_count: number;
-      capacity: number;
+      id: number
+      program_title: string
+      location_name: string
+      schedule_date: string
+      reserved_count: number
+      capacity: number
     }>(
       `SELECT 
         ps.id,
@@ -361,10 +355,10 @@ export async function getUpcomingSchedules(limit = 4) {
        WHERE ps.schedule_date >= $1
        ORDER BY ps.schedule_date ASC, ps.start_time ASC
        LIMIT $2`,
-      [today, limit],
-    );
-    return result.rows;
+      [today, limit]
+    )
+    return result.rows
   } catch {
-    return [];
+    return []
   }
 }

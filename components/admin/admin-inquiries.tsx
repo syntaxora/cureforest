@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useCallback } from "react";
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect, useCallback } from "react"
+import { AdminSidebar } from "@/components/admin/admin-sidebar"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   MessageSquare,
   Search,
@@ -36,114 +36,99 @@ import {
   Tag,
   CalendarDays,
   RefreshCw,
-} from "lucide-react";
+} from "lucide-react"
 
-type InquiryStatus = "pending" | "in_progress" | "completed" | "rejected";
+type InquiryStatus = "pending" | "in_progress" | "completed" | "rejected"
 
 interface Inquiry {
-  id: number;
-  name: string;
-  phone: string;
-  email: string | null;
-  organization: string | null;
-  category_name: string | null;
-  title: string;
-  content: string;
-  status: InquiryStatus;
-  admin_note: string | null;
-  created_at: string;
-  processed_at: string | null;
+  id: number
+  name: string
+  phone: string
+  email: string | null
+  organization: string | null
+  category_name: string | null
+  title: string
+  content: string
+  status: InquiryStatus
+  admin_note: string | null
+  created_at: string
+  processed_at: string | null
 }
 
 interface InquiryCounts {
-  all: number;
-  pending: number;
-  in_progress: number;
-  completed: number;
-  rejected: number;
+  all: number
+  pending: number
+  in_progress: number
+  completed: number
+  rejected: number
 }
 
 const statusConfig: Record<
   InquiryStatus,
-  {
-    label: string;
-    variant: "default" | "secondary" | "destructive" | "outline";
-    icon: typeof Clock;
-  }
+  { label: string; variant: "default" | "secondary" | "destructive" | "outline"; icon: typeof Clock }
 > = {
   pending: { label: "처리 전", variant: "outline", icon: Clock },
   in_progress: { label: "처리 중", variant: "secondary", icon: Loader2 },
   completed: { label: "처리 완료", variant: "default", icon: CheckCircle2 },
   rejected: { label: "거부", variant: "destructive", icon: XCircle },
-};
+}
 
 export function AdminInquiries() {
-  const [loading, setLoading] = useState(true);
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [loading, setLoading] = useState(true)
+  const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const [counts, setCounts] = useState<InquiryCounts>({
-    all: 0,
-    pending: 0,
-    in_progress: 0,
-    completed: 0,
-    rejected: 0,
-  });
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string>("all");
-  const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [processOpen, setProcessOpen] = useState(false);
-  const [processStatus, setProcessStatus] =
-    useState<InquiryStatus>("completed");
-  const [processNote, setProcessNote] = useState("");
-  const [processing, setProcessing] = useState(false);
+    all: 0, pending: 0, in_progress: 0, completed: 0, rejected: 0
+  })
+  const [search, setSearch] = useState("")
+  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null)
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [processOpen, setProcessOpen] = useState(false)
+  const [processStatus, setProcessStatus] = useState<InquiryStatus>("completed")
+  const [processNote, setProcessNote] = useState("")
+  const [processing, setProcessing] = useState(false)
 
   const fetchInquiries = useCallback(async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const params = new URLSearchParams();
-      if (filterStatus !== "all") params.set("status", filterStatus);
-      if (search) params.set("search", search);
-
-      const res = await fetch(`/api/admin/inquiries?${params}`);
+      const params = new URLSearchParams()
+      if (filterStatus !== "all") params.set("status", filterStatus)
+      if (search) params.set("search", search)
+      
+      const res = await fetch(`/api/admin/inquiries?${params}`)
       if (res.ok) {
-        const data = await res.json();
-        setInquiries(data.inquiries || []);
-        setCounts(
-          data.counts || {
-            all: 0,
-            pending: 0,
-            in_progress: 0,
-            completed: 0,
-            rejected: 0,
-          },
-        );
+        const data = await res.json()
+        setInquiries(data.inquiries || [])
+        setCounts(data.counts || {
+          all: 0, pending: 0, in_progress: 0, completed: 0, rejected: 0
+        })
       }
     } catch (error) {
-      console.error("Failed to fetch inquiries:", error);
+      console.error("Failed to fetch inquiries:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [filterStatus, search]);
+  }, [filterStatus, search])
 
   useEffect(() => {
-    fetchInquiries();
-  }, [fetchInquiries]);
+    fetchInquiries()
+  }, [fetchInquiries])
 
   function openDetail(inq: Inquiry) {
-    setSelectedInquiry(inq);
-    setDetailOpen(true);
+    setSelectedInquiry(inq)
+    setDetailOpen(true)
   }
 
   function openProcess(inq: Inquiry) {
-    setSelectedInquiry(inq);
-    setProcessStatus(inq.status === "pending" ? "in_progress" : "completed");
-    setProcessNote(inq.admin_note || "");
-    setProcessOpen(true);
+    setSelectedInquiry(inq)
+    setProcessStatus(inq.status === "pending" ? "in_progress" : "completed")
+    setProcessNote(inq.admin_note || "")
+    setProcessOpen(true)
   }
 
   async function handleProcess() {
-    if (!selectedInquiry) return;
-    setProcessing(true);
+    if (!selectedInquiry) return
+    setProcessing(true)
     try {
       const res = await fetch("/api/admin/inquiries", {
         method: "PATCH",
@@ -153,25 +138,25 @@ export function AdminInquiries() {
           status: processStatus,
           note: processNote,
         }),
-      });
+      })
       if (res.ok) {
-        setProcessOpen(false);
-        fetchInquiries();
+        setProcessOpen(false)
+        fetchInquiries()
       } else {
-        const data = await res.json();
-        alert(data.error || "처리 실패");
+        const data = await res.json()
+        alert(data.error || "처리 실패")
       }
     } catch (error) {
-      console.error("Failed to process inquiry:", error);
+      console.error("Failed to process inquiry:", error)
     } finally {
-      setProcessing(false);
+      setProcessing(false)
     }
   }
 
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return "";
-    return new Date(dateStr).toLocaleDateString("ko-KR");
-  };
+    if (!dateStr) return ""
+    return new Date(dateStr).toLocaleDateString("ko-KR")
+  }
 
   return (
     <div className="flex min-h-screen bg-muted/20">
@@ -182,24 +167,13 @@ export function AdminInquiries() {
         <div className="border-b border-border bg-card px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                {"문의 관리"}
-              </h1>
+              <h1 className="text-2xl font-bold text-foreground">{"문의 관리"}</h1>
               <p className="mt-1 text-sm text-muted-foreground">
                 {"접수된 고객 문의를 확인하고 처리 상태를 관리합니다."}
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={fetchInquiries}
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <RefreshCw className="h-4 w-4" />
-              )}
+            <Button variant="outline" size="sm" onClick={fetchInquiries} disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             </Button>
           </div>
         </div>
@@ -209,36 +183,11 @@ export function AdminInquiries() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
             {(
               [
-                {
-                  key: "all",
-                  label: "전체",
-                  count: counts.all,
-                  color: "text-foreground",
-                },
-                {
-                  key: "pending",
-                  label: "처리 전",
-                  count: counts.pending,
-                  color: "text-chart-2",
-                },
-                {
-                  key: "in_progress",
-                  label: "처리 중",
-                  count: counts.in_progress,
-                  color: "text-chart-4",
-                },
-                {
-                  key: "completed",
-                  label: "처리 완료",
-                  count: counts.completed,
-                  color: "text-primary",
-                },
-                {
-                  key: "rejected",
-                  label: "거부",
-                  count: counts.rejected,
-                  color: "text-destructive",
-                },
+                { key: "all", label: "전체", count: counts.all, color: "text-foreground" },
+                { key: "pending", label: "처리 전", count: counts.pending, color: "text-chart-2" },
+                { key: "in_progress", label: "처리 중", count: counts.in_progress, color: "text-chart-4" },
+                { key: "completed", label: "처리 완료", count: counts.completed, color: "text-primary" },
+                { key: "rejected", label: "거부", count: counts.rejected, color: "text-destructive" },
               ] as const
             ).map((item) => (
               <button
@@ -250,12 +199,8 @@ export function AdminInquiries() {
                     : "border-border bg-card hover:border-primary/30"
                 }`}
               >
-                <p className="text-xs font-medium text-muted-foreground">
-                  {item.label}
-                </p>
-                <p className={`text-xl font-bold ${item.color}`}>
-                  {item.count}
-                </p>
+                <p className="text-xs font-medium text-muted-foreground">{item.label}</p>
+                <p className={`text-xl font-bold ${item.color}`}>{item.count}</p>
               </button>
             ))}
           </div>
@@ -282,20 +227,15 @@ export function AdminInquiries() {
                 <Card className="border-border/60">
                   <CardContent className="flex flex-col items-center gap-2 py-12 text-center">
                     <MessageSquare className="h-8 w-8 text-muted-foreground/40" />
-                    <p className="text-sm text-muted-foreground">
-                      {"문의가 없습니다."}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{"문의가 없습니다."}</p>
                   </CardContent>
                 </Card>
               ) : (
                 inquiries.map((inq) => {
-                  const status = statusConfig[inq.status];
-                  const StatusIcon = status.icon;
+                  const status = statusConfig[inq.status]
+                  const StatusIcon = status.icon
                   return (
-                    <Card
-                      key={inq.id}
-                      className="border-border/60 transition-shadow hover:shadow-sm"
-                    >
+                    <Card key={inq.id} className="border-border/60 transition-shadow hover:shadow-sm">
                       <CardContent className="p-5">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                           {/* Left: Info */}
@@ -306,21 +246,14 @@ export function AdminInquiries() {
                                 {status.label}
                               </Badge>
                               {inq.category_name && (
-                                <Badge
-                                  variant="outline"
-                                  className="gap-1 text-xs"
-                                >
+                                <Badge variant="outline" className="gap-1 text-xs">
                                   <Tag className="h-3 w-3" />
                                   {inq.category_name}
                                 </Badge>
                               )}
                             </div>
-                            <h3 className="mb-1 font-medium text-foreground">
-                              {inq.title}
-                            </h3>
-                            <p className="line-clamp-2 text-sm text-muted-foreground">
-                              {inq.content}
-                            </p>
+                            <h3 className="mb-1 font-medium text-foreground">{inq.title}</h3>
+                            <p className="line-clamp-2 text-sm text-muted-foreground">{inq.content}</p>
                             <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <User className="h-3 w-3" />
@@ -343,9 +276,7 @@ export function AdminInquiries() {
                             </div>
                             {inq.admin_note && (
                               <div className="mt-2 rounded-lg bg-secondary/50 px-3 py-2 text-xs text-secondary-foreground">
-                                <span className="font-medium">
-                                  {"관리자 메모: "}
-                                </span>
+                                <span className="font-medium">{"관리자 메모: "}</span>
                                 {inq.admin_note}
                               </div>
                             )}
@@ -353,20 +284,11 @@ export function AdminInquiries() {
 
                           {/* Right: Actions */}
                           <div className="flex shrink-0 gap-2 sm:flex-col">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="gap-1.5"
-                              onClick={() => openDetail(inq)}
-                            >
+                            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => openDetail(inq)}>
                               <Eye className="h-3.5 w-3.5" />
                               {"상세"}
                             </Button>
-                            <Button
-                              size="sm"
-                              className="gap-1.5"
-                              onClick={() => openProcess(inq)}
-                            >
+                            <Button size="sm" className="gap-1.5" onClick={() => openProcess(inq)}>
                               <CheckCircle2 className="h-3.5 w-3.5" />
                               {"처리"}
                             </Button>
@@ -374,7 +296,7 @@ export function AdminInquiries() {
                         </div>
                       </CardContent>
                     </Card>
-                  );
+                  )
                 })
               )}
             </div>
@@ -398,15 +320,11 @@ export function AdminInquiries() {
                   {statusConfig[selectedInquiry.status].label}
                 </Badge>
                 {selectedInquiry.category_name && (
-                  <Badge variant="outline">
-                    {selectedInquiry.category_name}
-                  </Badge>
+                  <Badge variant="outline">{selectedInquiry.category_name}</Badge>
                 )}
               </div>
 
-              <h3 className="font-serif text-lg font-bold text-foreground">
-                {selectedInquiry.title}
-              </h3>
+              <h3 className="font-serif text-lg font-bold text-foreground">{selectedInquiry.title}</h3>
 
               <div className="grid grid-cols-2 gap-3 rounded-xl bg-secondary/50 p-4 text-sm">
                 <div className="flex items-center gap-2">
@@ -436,19 +354,13 @@ export function AdminInquiries() {
               </div>
 
               <div className="rounded-xl border border-border p-4">
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
-                  {selectedInquiry.content}
-                </p>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">{selectedInquiry.content}</p>
               </div>
 
               {selectedInquiry.admin_note && (
                 <div className="rounded-xl bg-primary/5 border border-primary/20 p-4">
-                  <p className="mb-1 text-xs font-semibold text-primary">
-                    {"관리자 메모"}
-                  </p>
-                  <p className="text-sm text-foreground">
-                    {selectedInquiry.admin_note}
-                  </p>
+                  <p className="mb-1 text-xs font-semibold text-primary">{"관리자 메모"}</p>
+                  <p className="text-sm text-foreground">{selectedInquiry.admin_note}</p>
                 </div>
               )}
             </div>
@@ -457,8 +369,8 @@ export function AdminInquiries() {
             <Button
               variant="outline"
               onClick={() => {
-                setDetailOpen(false);
-                if (selectedInquiry) openProcess(selectedInquiry);
+                setDetailOpen(false)
+                if (selectedInquiry) openProcess(selectedInquiry)
               }}
             >
               {"상태 변경하기"}
@@ -476,23 +388,15 @@ export function AdminInquiries() {
           {selectedInquiry && (
             <div className="flex flex-col gap-5">
               <div className="rounded-xl bg-secondary/50 p-4">
-                <p className="text-sm font-medium text-foreground">
-                  {selectedInquiry.title}
-                </p>
+                <p className="text-sm font-medium text-foreground">{selectedInquiry.title}</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {selectedInquiry.name} |{" "}
-                  {formatDate(selectedInquiry.created_at)}
+                  {selectedInquiry.name} | {formatDate(selectedInquiry.created_at)}
                 </p>
               </div>
 
               <div className="flex flex-col gap-2.5">
-                <label className="text-sm font-semibold text-foreground">
-                  {"처리 상태"}
-                </label>
-                <Select
-                  value={processStatus}
-                  onValueChange={(v) => setProcessStatus(v as InquiryStatus)}
-                >
+                <label className="text-sm font-semibold text-foreground">{"처리 상태"}</label>
+                <Select value={processStatus} onValueChange={(v) => setProcessStatus(v as InquiryStatus)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -520,9 +424,7 @@ export function AdminInquiries() {
             </div>
           )}
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setProcessOpen(false)}>
-              {"취소"}
-            </Button>
+            <Button variant="outline" onClick={() => setProcessOpen(false)}>{"취소"}</Button>
             <Button onClick={handleProcess} disabled={processing}>
               {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {"저장"}
@@ -531,5 +433,5 @@ export function AdminInquiries() {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }

@@ -2,12 +2,18 @@ import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, MapPin, Clock, Users, ChevronRight, CalendarCheck } from "lucide-react"
+import { ArrowLeft, ArrowRight, MapPin, Clock, Users, ChevronRight, CalendarCheck, CheckCircle, AlertCircle, HelpCircle, Banknote } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProgramCTA } from "@/components/programs/program-cta"
 import { programs, getProgramBySlug } from "@/lib/programs-data"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -84,7 +90,7 @@ export default async function ProgramDetailPage({ params }: Props) {
 
         {/* Info bar */}
         <section className="border-b border-border bg-card">
-          <div className="mx-auto flex max-w-6xl flex-wrap gap-6 px-6 py-5 sm:gap-10">
+          <div className="mx-auto flex max-w-6xl flex-wrap gap-4 px-6 py-5 sm:gap-8">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 text-primary" />
               <span>{program.location}</span>
@@ -95,7 +101,11 @@ export default async function ProgramDetailPage({ params }: Props) {
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Users className="h-4 w-4 text-primary" />
-              <span>{program.target}</span>
+              <span>{program.capacity}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Banknote className="h-4 w-4 text-primary" />
+              <span>{program.price}</span>
             </div>
           </div>
         </section>
@@ -103,25 +113,32 @@ export default async function ProgramDetailPage({ params }: Props) {
         {/* Main content */}
         <section className="bg-background py-16 lg:py-24">
           <div className="mx-auto max-w-6xl px-6">
-            <div className="grid gap-16 lg:grid-cols-5">
-              {/* Left: description & details */}
-              <div className="lg:col-span-3">
-                <h2 className="mb-6 font-serif text-2xl font-bold text-foreground">
-                  {"프로그램 소개"}
-                </h2>
-                {program.description ? (
-                  <div className="prose prose-sm max-w-none mb-10 text-muted-foreground dark:prose-invert prose-img:max-w-full prose-img:h-auto" 
-                    dangerouslySetInnerHTML={{ __html: program.description }} />
-                ) : (
-                  <p className="mb-10 leading-relaxed text-muted-foreground lg:text-lg">
-                    {program.fullDescription}
-                  </p>
-                )}
+            {/* Program Introduction */}
+            <div className="mb-16">
+              <h2 className="mb-6 font-serif text-2xl font-bold text-foreground">
+                {"프로그램 소개"}
+              </h2>
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                {program.fullDescription}
+              </p>
+            </div>
 
+            {/* Target */}
+            <div className="mb-16 rounded-xl border border-primary/20 bg-primary/5 p-6">
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <Users className="h-4 w-4" />
+                {"이런 분께 추천합니다"}
+              </div>
+              <p className="mt-2 text-lg text-foreground">{program.target}</p>
+            </div>
+
+            {/* Details & Effects */}
+            <div className="mb-16 grid gap-10 lg:grid-cols-2">
+              <div>
                 <h3 className="mb-5 font-serif text-xl font-bold text-foreground">
-                  {"세부 활동"}
+                  {"프로그램 내용"}
                 </h3>
-                <ul className="mb-10 flex flex-col gap-3">
+                <ul className="flex flex-col gap-3">
                   {program.details.map((detail, i) => (
                     <li
                       key={i}
@@ -132,7 +149,8 @@ export default async function ProgramDetailPage({ params }: Props) {
                     </li>
                   ))}
                 </ul>
-
+              </div>
+              <div>
                 <h3 className="mb-5 font-serif text-xl font-bold text-foreground">
                   {"기대 효과"}
                 </h3>
@@ -140,49 +158,176 @@ export default async function ProgramDetailPage({ params }: Props) {
                   {program.effects.map((effect, i) => (
                     <span
                       key={i}
-                      className="rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary"
+                      className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary"
                     >
                       {effect}
                     </span>
                   ))}
                 </div>
-
-                {/* Reserve button */}
-                <div className="mt-10">
-                  <Button asChild size="lg" className="gap-2 text-base">
-                    <Link href={`/programs/${program.slug}/reserve`}>
-                      <CalendarCheck className="h-5 w-5" />
-                      {"이 프로그램 예약하기"}
-                    </Link>
-                  </Button>
-                </div>
               </div>
+            </div>
 
-              {/* Right: steps */}
-              <div className="lg:col-span-2">
-                <div className="rounded-2xl border border-border bg-card p-6 lg:p-8">
-                  <h3 className="mb-6 font-serif text-xl font-bold text-card-foreground">
-                    {"진행 순서"}
-                  </h3>
-                  <ol className="flex flex-col gap-6">
-                    {program.steps.map((step, i) => (
-                      <li key={i} className="flex gap-4">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
-                          {i + 1}
+            {/* Features */}
+            <div className="mb-16">
+              <h3 className="mb-5 font-serif text-xl font-bold text-foreground">
+                {"프로그램 특징"}
+              </h3>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {program.features.map((feature, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <span className="text-foreground">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Steps */}
+            <div className="mb-16 rounded-2xl border border-border bg-card p-8">
+              <h3 className="mb-8 font-serif text-xl font-bold text-card-foreground">
+                {"진행 순서"}
+              </h3>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {program.steps.map((step, i) => (
+                  <div key={i} className="relative">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
+                      {i + 1}
+                    </div>
+                    <h4 className="mt-4 font-medium text-card-foreground">
+                      {step.title}
+                    </h4>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {step.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Sub Programs */}
+            {program.subPrograms && program.subPrograms.length > 0 && (
+              <div className="mb-16">
+                <h2 className="mb-8 font-serif text-2xl font-bold text-foreground">
+                  {"세부 프로그램"}
+                </h2>
+                <div className="flex flex-col gap-16">
+                  {program.subPrograms.map((sub, index) => (
+                    <div
+                      key={sub.id}
+                      className={`grid gap-8 lg:grid-cols-2 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
+                    >
+                      {/* Image */}
+                      <div className={`relative aspect-[4/3] overflow-hidden rounded-2xl ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
+                        <Image
+                          src={sub.image}
+                          alt={sub.title}
+                          fill
+                          className="object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className={`flex flex-col justify-center ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
+                        <div className="mb-3 flex flex-wrap items-center gap-2">
+                          <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+                            {sub.duration}
+                          </span>
+                          <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
+                            {sub.target}
+                          </span>
                         </div>
+                        
+                        <h3 className="mb-4 font-serif text-2xl font-bold text-foreground">
+                          {sub.title}
+                        </h3>
+                        
+                        <p className="mb-6 leading-relaxed text-muted-foreground">
+                          {sub.fullDescription}
+                        </p>
+                        
+                        {/* Highlights */}
+                        <div className="mb-6">
+                          <h4 className="mb-3 text-sm font-medium text-foreground">{"주요 내용"}</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {sub.highlights.map((highlight, i) => (
+                              <span
+                                key={i}
+                                className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                              >
+                                <CheckCircle className="h-3 w-3" />
+                                {highlight}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Activities */}
                         <div>
-                          <p className="font-medium text-card-foreground">
-                            {step.title}
-                          </p>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                            {step.description}
-                          </p>
+                          <h4 className="mb-3 text-sm font-medium text-foreground">{"활동 구성"}</h4>
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                            {sub.activities.map((activity, i) => (
+                              <span key={i} className="flex items-center gap-2">
+                                {activity}
+                                {i < sub.activities.length - 1 && (
+                                  <ChevronRight className="h-3 w-3 text-muted-foreground/50" />
+                                )}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      </li>
-                    ))}
-                  </ol>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
+            )}
+
+            {/* Notices */}
+            <div className="mb-16 rounded-xl border border-amber-200 bg-amber-50 p-6 dark:border-amber-900 dark:bg-amber-950/30">
+              <div className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400">
+                <AlertCircle className="h-4 w-4" />
+                {"참가 안내사항"}
+              </div>
+              <ul className="mt-4 flex flex-col gap-2">
+                {program.notices.map((notice, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-amber-800 dark:text-amber-300">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                    <span>{notice}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* FAQs */}
+            {program.faqs && program.faqs.length > 0 && (
+              <div className="mb-16">
+                <h3 className="mb-6 flex items-center gap-2 font-serif text-xl font-bold text-foreground">
+                  <HelpCircle className="h-5 w-5 text-primary" />
+                  {"자주 묻는 질문"}
+                </h3>
+                <Accordion type="single" collapsible className="w-full">
+                  {program.faqs.map((faq, i) => (
+                    <AccordionItem key={i} value={`faq-${i}`}>
+                      <AccordionTrigger className="text-left text-foreground hover:text-primary">
+                        {faq.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground">
+                        {faq.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            )}
+
+            {/* Reserve button */}
+            <div className="flex justify-center">
+              <Button asChild size="lg" className="gap-2 px-8 text-base">
+                <Link href={`/reserve/${program.slug}`}>
+                  <CalendarCheck className="h-5 w-5" />
+                  {"이 프로그램 예약하기"}
+                </Link>
+              </Button>
             </div>
           </div>
         </section>

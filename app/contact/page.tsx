@@ -30,8 +30,8 @@ export default function ContactPage() {
             <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm text-muted-foreground shadow-sm">
               <Mail className="h-4 w-4 text-primary" />
               {"이메일: "}
-              <a href="mailto:cure2410@naver.com" className="font-medium text-primary hover:underline">
-                cure2410@naver.com
+              <a href="mailto:cureforest@naver.com" className="font-medium text-primary hover:underline">
+                cureforest@naver.com
               </a>
             </div>
           </div>

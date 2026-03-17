@@ -50,7 +50,6 @@ export function ReservationForm({
   const [mounted, setMounted] = useState(false)
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [dateOpen, setDateOpen] = useState(false)
-  const [location, setLocation] = useState("")
   const [gender, setGender] = useState("")
   const [ageGroup, setAgeGroup] = useState("")
   const [privacyAgreed, setPrivacyAgreed] = useState(false)
@@ -61,16 +60,6 @@ export function ReservationForm({
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  const locations = [
-    { value: "seoul", label: "서울 치유의 숲" },
-    { value: "pocheon", label: "포천 국립치유의 숲" },
-    { value: "jangseong", label: "장성 편백치유의 숲" },
-    { value: "yeongju", label: "영주 치유의 숲" },
-    { value: "hoengseong", label: "횡성 치유의 숲" },
-    { value: "jeongeup", label: "정읍 치유의 숲" },
-    { value: "custom", label: "기타 (요청사항에 기재)" },
-  ]
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -85,7 +74,7 @@ export function ReservationForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           programSlug,
-          locationSlug: location === "custom" ? "seoul" : location,
+          locationSlug: programSlug,
           date: date?.toISOString(),
           name: formData.get("name"),
           phone: formData.get("phone"),
@@ -133,19 +122,15 @@ export function ReservationForm({
               {format(date, "yyyy년 M월 d일 (EEEE)", { locale: ko })}
             </p>
           )}
-          {location && (
-            <p className="text-muted-foreground">
-              {"장소: "}
-              {locations.find((l) => l.value === location)?.label}
-            </p>
-          )}
+          <p className="text-muted-foreground">
+            {"장소: "}{programTitle}
+          </p>
         </div>
         <Button
           variant="outline"
           onClick={() => {
             setSubmitted(false)
             setDate(undefined)
-            setLocation("")
             setGender("")
             setAgeGroup("")
             setPrivacyAgreed(false)
@@ -220,25 +205,16 @@ export function ReservationForm({
           </Popover>
         </div>
 
-        {/* Location picker */}
+        {/* Location (auto-selected, read-only) */}
         <div className="flex flex-col gap-2.5">
           <Label className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <MapPin className="h-4 w-4 text-primary" />
-            {"장소 선택"}
-            <span className="text-destructive">{"*"}</span>
+            {"장소"}
           </Label>
-          <Select value={location} onValueChange={setLocation}>
-            <SelectTrigger className="bg-card">
-              <SelectValue placeholder="장소를 선택하세요" />
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map((loc) => (
-                <SelectItem key={loc.value} value={loc.value}>
-                  {loc.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex h-10 items-center gap-2 rounded-md border border-border bg-secondary/50 px-3 text-sm text-foreground">
+            <MapPin className="h-4 w-4 shrink-0 text-primary" />
+            <span className="truncate">{programTitle}</span>
+          </div>
         </div>
       </div>
 
@@ -383,7 +359,7 @@ export function ReservationForm({
           <p className="mb-1 font-semibold text-foreground">{"1. 수집 항목"}</p>
           <p className="mb-2">{"이름, 연락처, 이메일, 성별, 나이대, 참가 인원, 희망 날짜, 장소, 요청사항"}</p>
           <p className="mb-1 font-semibold text-foreground">{"2. 수집 및 이용 목적"}</p>
-          <p className="mb-2">{"산림치유 프로그램 예약 접수 및 확인, 예약 관련 안내 및 연락, 프로그램 운영 및 참가자 관리"}</p>
+          <p className="mb-2">{"산림치유 프로그램 예약 접수 및 확인, 예약 ��련 안내 및 연락, 프로그램 운영 및 참가자 관리"}</p>
           <p className="mb-1 font-semibold text-foreground">{"3. 보유 및 이용 기간"}</p>
           <p className="mb-2">{"예약 완료 후 1년간 보유하며, 이후 지체 없이 파기합니다. 단, 관계 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관합니다."}</p>
           <p className="mb-1 font-semibold text-foreground">{"4. 동의 거부권 및 불이익"}</p>
@@ -396,7 +372,7 @@ export function ReservationForm({
         type="submit"
         size="lg"
         className="w-full gap-2 text-base"
-        disabled={!date || !location || !gender || !ageGroup || !privacyAgreed || loading}
+        disabled={!date || !gender || !ageGroup || !privacyAgreed || loading}
       >
         {loading ? (
           <>
@@ -406,7 +382,7 @@ export function ReservationForm({
         ) : (
           <>
             <CalendarDays className="h-5 w-5" />
-            {"예약 접수하기"}
+            {"예약 접��하기"}
           </>
         )}
       </Button>

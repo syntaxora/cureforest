@@ -13,7 +13,7 @@ export function Footer() {
               <span className="text-lg font-bold tracking-tight">CureForest</span>
             </div>
             <p className="text-sm leading-relaxed text-background/60">
-              {"큐어포레스트는 산림치유를 통해 국민의 건강 증진과 삶의 질 향상에 기여하는 전문 힐링 프로그램입니다."}
+              {"큐어포레스트는 산림치유 전문 힐링프로그램 운영업체입니다. 자연과 함께하는 치유의 경험을 통해 몸과 마음의 건강을 되찾으실 수 있도록 도와드립니다."}
             </p>
           </div>
 
@@ -21,10 +21,9 @@ export function Footer() {
           <div className="flex flex-col gap-4">
             <h4 className="text-sm font-bold uppercase tracking-wider text-background/80">{"바로가기"}</h4>
             <nav className="flex flex-col gap-2">
-              <a href="#introduction" className="text-sm text-background/50 transition-colors hover:text-background">{"산림치유 소개"}</a>
-              <a href="#targets" className="text-sm text-background/50 transition-colors hover:text-background">{"산림치유 대상"}</a>
-              <a href="#effects" className="text-sm text-background/50 transition-colors hover:text-background">{"프로그램 효과"}</a>
-              <Link href="/programs" className="text-sm text-background/50 transition-colors hover:text-background">{"프로그램 예약"}</Link>
+              <Link href="/" className="text-sm text-background/50 transition-colors hover:text-background">{"큐어포레스트"}</Link>
+              <Link href="/programs" className="text-sm text-background/50 transition-colors hover:text-background">{"프로그램 안내"}</Link>
+              <Link href="/reserve" className="text-sm text-background/50 transition-colors hover:text-background">{"프로그램 예약"}</Link>
             </nav>
           </div>
 
@@ -34,8 +33,8 @@ export function Footer() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 text-sm text-background/60">
                 <Mail className="h-4 w-4 shrink-0" />
-                <a href="mailto:cure2410@naver.com" className="transition-colors hover:text-background">
-                  cure2410@naver.com
+                <a href="mailto:cureforest@naver.com" className="transition-colors hover:text-background">
+                  cureforest@naver.com
                 </a>
               </div>
               <Link
@@ -51,7 +50,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center gap-4 border-t border-background/10 pt-8">
           <p className="text-xs text-background/40">
-            {"\u00A9 2026 CureForest \uD050\uC5B4\uD3EC\uB808\uC2A4\uD2B8. All rights reserved."}
+            {"\u00A9 2026 CureForest 큐어포레스트. All rights reserved."}
           </p>
         </div>
       </div>

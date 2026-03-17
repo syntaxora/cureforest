@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Phone, Mail } from "lucide-react"
+import { Mail, MessageSquare } from "lucide-react"
 
 export function ProgramCTA() {
   return (
@@ -13,18 +13,18 @@ export function ProgramCTA() {
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
-            href="tel:010-8416-8058"
+            href="mailto:cureforest@naver.com"
             className="flex items-center gap-2 rounded-full bg-background px-8 py-3.5 text-sm font-bold text-primary transition-opacity hover:opacity-90"
           >
-            <Phone className="h-4 w-4" />
-            {"010-8416-8058"}
+            <Mail className="h-4 w-4" />
+            {"cureforest@naver.com"}
           </Link>
           <Link
-            href="mailto:cure2410@naver.com"
+            href="/contact"
             className="flex items-center gap-2 rounded-full border border-primary-foreground/30 px-8 py-3.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary-foreground/10"
           >
-            <Mail className="h-4 w-4" />
-            {"cure2410@naver.com"}
+            <MessageSquare className="h-4 w-4" />
+            {"문의하기"}
           </Link>
         </div>
       </div>

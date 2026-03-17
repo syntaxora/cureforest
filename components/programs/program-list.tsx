@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, CalendarCheck } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { programs } from "@/lib/programs-data"
 
 export function ProgramList() {
@@ -8,10 +8,10 @@ export function ProgramList() {
     <section className="bg-background py-24 lg:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <p className="mb-4 text-center text-sm font-medium uppercase tracking-[0.15em] text-primary">
-          {"9 Programs"}
+          {"6 Programs"}
         </p>
         <h2 className="mb-4 text-center font-serif text-3xl font-bold text-foreground sm:text-4xl text-balance">
-          {"숲 치유 세부 프로그램"}
+          {"숲 치유 프로그램"}
         </h2>
         <p className="mx-auto mb-16 max-w-2xl text-center leading-relaxed text-muted-foreground">
           {"본 프로그램은 실내 및 실외에서 진행됩니다. 각 프로그램을 클릭하여 자세한 내용을 확인해 보세요."}
@@ -73,18 +73,9 @@ export function ProgramList() {
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1 text-sm font-medium text-primary">
-                      {"자세히 보기"}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
-                    <Link
-                      href={`/programs/${program.slug}/reserve`}
-                      className="relative z-20 inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90"
-                    >
-                      <CalendarCheck className="h-3 w-3" />
-                      {"예약"}
-                    </Link>
+                  <div className="flex items-center gap-1 text-sm font-medium text-primary">
+                    {"자세히 보기"}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
               </div>
