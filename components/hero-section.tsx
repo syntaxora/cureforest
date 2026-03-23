@@ -7,11 +7,15 @@ export function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
       <Image
-        src="/images/hero-forest.jpg"
-        alt="고요한 숲속 풍경"
+        src="/images/hero-main.jpg"
+        alt="숲에서 자연 치유를 경험하는 사람들"
         fill
         className="object-cover"
         priority
+        sizes="100vw"
+        quality={75}
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIhAAAgEDBAMBAAAAAAAAAAAAAQIDAAQRBQYSIRMxQVH/xAAVAQEBAAAAAAAAAAAAAAAAAAADBP/EABoRAAICAwAAAAAAAAAAAAAAAAECABEDITH/2gAMAwEAAhEDEQA/AJu3txXmm7mghhuJY4oFOFRyoGcdAH0K0j+gaj/M/wClKVJlj0qgRLJJz/Z/Z//Z"
       />
       <div className="absolute inset-0 bg-foreground/50" />
 

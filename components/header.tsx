@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Menu, X, CalendarCheck, Info, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -14,13 +13,10 @@ export function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image
+          <img
             src="/images/logo-new.png"
             alt="CureForest 큐어포레스트 로고"
-            width={180}
-            height={44}
             className="h-11 w-auto object-contain"
-            priority
           />
         </Link>
 

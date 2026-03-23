@@ -382,7 +382,7 @@ export function ReservationForm({
         ) : (
           <>
             <CalendarDays className="h-5 w-5" />
-            {"예약 접��하기"}
+            {"예약 접수하기"}
           </>
         )}
       </Button>
@@ -390,8 +390,8 @@ export function ReservationForm({
       <p className="text-center text-xs leading-relaxed text-muted-foreground">
         {"예약 접수 후 담당 산림치유지도사가 확인하여 연락드립니다. "}
         {"문의: "}
-        <a href="mailto:cure2410@naver.com" className="text-primary underline">
-          cure2410@naver.com
+        <a href="mailto:cureforest@naver.com" className="text-primary underline">
+          cureforest@naver.com
         </a>
       </p>
     </form>

@@ -4,11 +4,13 @@ export function ProgramHero() {
   return (
     <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden pt-20">
       <Image
-        src="/images/hero-forest.jpg"
-        alt="숲 치유 프로그램 배경"
+        src="/images/hero-main.jpg"
+        alt="숲에서 자연 치유를 경험하는 사람들"
         fill
         className="object-cover"
         priority
+        sizes="100vw"
+        quality={75}
       />
       <div className="absolute inset-0 bg-foreground/60" />
       <div className="relative z-10 mx-auto max-w-4xl px-6 py-24 text-center">

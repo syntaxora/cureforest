@@ -52,7 +52,7 @@ export const programs: Program[] = [
     title: "싱잉볼 테라피",
     subtitle: "Singing Bowl Therapy",
     icon: Music,
-    image: "/images/program-singing-bowl.jpg",
+    image: "/images/singing-bowl.jpg",
     shortDescription:
       "싱잉볼의 진동과 소리를 통해 깊은 이완과 치유를 경험하는 소리 명상 프로그램입니다.",
     fullDescription:
@@ -196,7 +196,7 @@ export const programs: Program[] = [
       },
       {
         question: "세션 중 잠이 들어도 되나요?",
-        answer: "네, 깊은 이완 상태에서 잠이 드는 것은 자��스러운 현상입니다.",
+        answer: "네, 깊은 이완 상태에서 잠이 드는 것��� 자��스러운 현상입니다.",
       },
     ],
   },
@@ -206,7 +206,7 @@ export const programs: Program[] = [
     title: "컬러 테라피",
     subtitle: "Color Therapy",
     icon: Palette,
-    image: "/images/program-color-therapy.jpg",
+    image: "/images/color-therapy.jpg",
     shortDescription:
       "색채의 에너지를 활용하여 심리적 안정과 감정 치유를 돕는 색채 치료 프로그램입니다.",
     fullDescription:
@@ -273,7 +273,7 @@ export const programs: Program[] = [
     title: "소도구 테라피",
     subtitle: "Props Therapy",
     icon: Heart,
-    image: "/images/program-props-therapy.jpg",
+    image: "/images/props-therapy.jpg",
     shortDescription:
       "다양한 치유 소도구를 활용하여 몸과 마음의 긴장을 풀어주는 테라피 프로그램입니다.",
     fullDescription:
@@ -334,7 +334,7 @@ export const programs: Program[] = [
     title: "신체활동",
     subtitle: "Body Activity",
     icon: Dumbbell,
-    image: "/images/program-body-activity.jpg",
+    image: "/images/body-activity.jpg",
     shortDescription:
       "자연 속에서 진행하는 건강한 신체활동 프로그램입니다. 몸을 움직여 활력을 되찾으세요.",
     fullDescription:
@@ -386,7 +386,7 @@ export const programs: Program[] = [
       {
         question: "노르딕 워킹 폴은 어디서 구하나요?",
         answer:
-          "프로그램에서 폴을 대여해드립니다. 구매를 원하시면 안내해드립니다.",
+          "프로그램에서 폴을 대여해드립니다. 구매�� 원하시면 안내해드립니다.",
       },
     ],
   },
@@ -396,7 +396,7 @@ export const programs: Program[] = [
     title: "아로마 테라피",
     subtitle: "Aroma Therapy",
     icon: Sparkles,
-    image: "/images/program-aroma-therapy.jpg",
+    image: "/images/aroma-therapy.jpg",
     shortDescription:
       "식물에서 추출한 천연 에센셜 오일의 향기로 심신의 균형을 되찾는 향기 치유 프로그램입니다.",
     fullDescription:
@@ -459,7 +459,7 @@ export const programs: Program[] = [
     title: "차 테라피",
     subtitle: "Tea Therapy",
     icon: Coffee,
-    image: "/images/program-tea-therapy.jpg",
+    image: "/images/tea-therapy.jpg",
     shortDescription:
       "자연 속에서 다양한 차를 천천히 우리고 마시며 마음을 고요하게 다스리는 차 명상 프로그램입니다.",
     fullDescription:

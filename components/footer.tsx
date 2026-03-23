@@ -49,6 +49,11 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center gap-4 border-t border-background/10 pt-8">
+          <div className="flex gap-4">
+            <Link href="/privacy" className="text-xs text-background/50 transition-colors hover:text-background">
+              {"개인정보처리방침"}
+            </Link>
+          </div>
           <p className="text-xs text-background/40">
             {"\u00A9 2026 CureForest 큐어포레스트. All rights reserved."}
           </p>

@@ -68,6 +68,7 @@ export function IntroductionSection() {
                 alt="산림치유 프로그램 진행 모습"
                 fill
                 className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </ScrollAnimate>
@@ -82,6 +83,7 @@ export function IntroductionSection() {
                 alt="치유의 숲 전경"
                 fill
                 className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </ScrollAnimate>

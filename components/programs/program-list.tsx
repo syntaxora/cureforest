@@ -39,14 +39,14 @@ export function ProgramList() {
                     alt={program.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    loading="lazy"
+                    quality={75}
                   />
                   <div className="absolute inset-0 bg-foreground/20 transition-opacity group-hover:bg-foreground/10" />
                   <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <span className="absolute right-4 top-4 rounded-full bg-background/90 px-3 py-1 text-xs font-bold text-foreground">
-                    {program.number}
-                  </span>
                 </div>
 
                 {/* Content */}

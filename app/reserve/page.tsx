@@ -3,7 +3,7 @@ import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { MapPin, Clock, CalendarCheck } from "lucide-react"
+import { MapPin, Clock, ArrowRight } from "lucide-react"
 import { locationPrograms } from "@/lib/locations-data"
 
 export const metadata = {
@@ -19,11 +19,13 @@ export default function ReservePage() {
         {/* Hero */}
         <section className="relative flex min-h-[40vh] items-center justify-center overflow-hidden">
           <Image
-            src="/images/hero-forest.jpg"
-            alt="프로그램 예약 배경"
+            src="/images/hero-main.jpg"
+            alt="숲에서 자연 치유를 경험하는 사람들"
             fill
             className="object-cover"
             priority
+            sizes="100vw"
+            quality={75}
           />
           <div className="absolute inset-0 bg-foreground/60" />
           <div className="relative z-10 mx-auto max-w-4xl px-6 py-16 text-center">
@@ -56,6 +58,9 @@ export default function ReservePage() {
                         alt={location.title}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        loading="lazy"
+                        quality={75}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
                       <div className="absolute bottom-4 left-4 flex items-center gap-2">
@@ -83,9 +88,9 @@ export default function ReservePage() {
                         </span>
                       </div>
                       <Button asChild className="mt-auto w-full gap-2">
-                        <Link href={`/reserve/${location.slug}`}>
-                          <CalendarCheck className="h-4 w-4" />
-                          {"예약하기"}
+                        <Link href={`/locations/${location.slug}`}>
+                          <ArrowRight className="h-4 w-4" />
+                          {"자세히 보기"}
                         </Link>
                       </Button>
                     </div>
