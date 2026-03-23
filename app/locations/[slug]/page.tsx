@@ -1,49 +1,61 @@
-import { notFound } from "next/navigation"
-import type { Metadata } from "next"
-import Link from "next/link"
-import Image from "next/image"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { locationPrograms, getLocationBySlug } from "@/lib/locations-data"
-import { MapPin, Clock, Users, CalendarCheck, Check } from "lucide-react"
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { locationPrograms, getLocationBySlug } from "@/lib/locations-data";
+import { MapPin, Clock, Users, CalendarCheck, Check } from "lucide-react";
 
 export async function generateStaticParams() {
   return locationPrograms.map((location) => ({
     slug: location.slug,
-  }))
+  }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-  const location = getLocationBySlug(slug)
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const location = getLocationBySlug(slug);
 
   if (!location) {
-    return { title: "장소를 찾을 수 없습니다" }
+    return { title: "장소를 찾을 수 없습니다" };
   }
 
   return {
     title: `${location.title} | CureForest 큐어포레스트`,
     description: location.shortDescription,
-  }
+  };
 }
 
-export default async function LocationDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const location = getLocationBySlug(slug)
+export default async function LocationDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const location = getLocationBySlug(slug);
 
   if (!location) {
-    notFound()
+    notFound();
   }
 
-  const Icon = location.icon
+  const Icon = location.icon;
 
   return (
     <>
       <Header />
       {/* Sticky Reservation Button */}
       <div className="fixed right-6 bottom-6 z-50 md:right-8 md:bottom-8">
-        <Button asChild size="lg" className="gap-2 shadow-lg px-6 py-6 text-lg h-auto">
+        <Button
+          asChild
+          size="lg"
+          className="gap-2 shadow-lg px-6 py-6 text-lg h-auto"
+        >
           <Link href={`/reserve/${location.slug}`}>
             <CalendarCheck className="h-6 w-6" />
             {"예약하기"}
@@ -94,7 +106,10 @@ export default async function LocationDetailPage({ params }: { params: Promise<{
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-6 md:grid-cols-2">
               {location.galleryImages.map((img, index) => (
-                <div key={index} className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+                <div
+                  key={index}
+                  className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+                >
                   <Image
                     src={img}
                     alt={`${location.title} 이미지 ${index + 1}`}
@@ -115,20 +130,26 @@ export default async function LocationDetailPage({ params }: { params: Promise<{
             <div className="grid gap-8 md:grid-cols-2">
               {/* Left Column - Details */}
               <div className="space-y-6">
-                <h2 className="font-serif text-2xl font-bold text-foreground">프로그램 정보</h2>
+                <h2 className="font-serif text-2xl font-bold text-foreground">
+                  프로그램 정보
+                </h2>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                     <div>
                       <p className="font-semibold text-foreground">장소</p>
-                      <p className="text-muted-foreground">{location.address}</p>
+                      <p className="text-muted-foreground">
+                        {location.address}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                     <div>
                       <p className="font-semibold text-foreground">소요 시간</p>
-                      <p className="text-muted-foreground">{location.duration}</p>
+                      <p className="text-muted-foreground">
+                        {location.duration}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -143,7 +164,9 @@ export default async function LocationDetailPage({ params }: { params: Promise<{
 
               {/* Right Column - Features */}
               <div className="space-y-6">
-                <h2 className="font-serif text-2xl font-bold text-foreground">특징</h2>
+                <h2 className="font-serif text-2xl font-bold text-foreground">
+                  특징
+                </h2>
                 <ul className="space-y-3">
                   {location.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-3">
@@ -162,11 +185,16 @@ export default async function LocationDetailPage({ params }: { params: Promise<{
         {/* Notices Section */}
         <section className="bg-secondary/30 py-16">
           <div className="mx-auto max-w-4xl px-6">
-            <h2 className="mb-8 text-center font-serif text-2xl font-bold text-foreground">안내사항</h2>
+            <h2 className="mb-8 text-center font-serif text-2xl font-bold text-foreground">
+              안내사항
+            </h2>
             <div className="rounded-2xl bg-card p-6 shadow-sm">
               <ul className="space-y-3">
                 {location.notices.map((notice, index) => (
-                  <li key={index} className="flex items-start gap-3 text-muted-foreground">
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 text-muted-foreground"
+                  >
                     <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                     {notice}
                   </li>
@@ -183,12 +211,12 @@ export default async function LocationDetailPage({ params }: { params: Promise<{
               {location.title}에서 특별한 치유를 경험하세요
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-primary-foreground/80">
-              산림치유지도사가 안내하��� 프로그램에 참여해보세요.
+              산림치유지도사가 안내하는 프로그램에 참여해보세요.
             </p>
           </div>
         </section>
       </main>
       <Footer />
     </>
-  )
+  );
 }

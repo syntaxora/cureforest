@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Calendar } from "@/components/ui/calendar"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useState, useEffect } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   CheckCircle2,
   CalendarDays,
@@ -30,15 +30,15 @@ import {
   Users,
   MessageSquare,
   Loader2,
-} from "lucide-react"
-import { ko } from "date-fns/locale"
-import { format } from "date-fns"
+} from "lucide-react";
+import { ko } from "date-fns/locale";
+import { format } from "date-fns";
 
 interface ReservationFormProps {
-  programTitle: string
-  programNumber: string
-  programSubtitle: string
-  programSlug: string
+  programTitle: string;
+  programNumber: string;
+  programSubtitle: string;
+  programSlug: string;
 }
 
 export function ReservationForm({
@@ -47,26 +47,26 @@ export function ReservationForm({
   programSubtitle,
   programSlug,
 }: ReservationFormProps) {
-  const [mounted, setMounted] = useState(false)
-  const [date, setDate] = useState<Date | undefined>(undefined)
-  const [dateOpen, setDateOpen] = useState(false)
-  const [gender, setGender] = useState("")
-  const [ageGroup, setAgeGroup] = useState("")
-  const [privacyAgreed, setPrivacyAgreed] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [mounted, setMounted] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [dateOpen, setDateOpen] = useState(false);
+  const [gender, setGender] = useState("");
+  const [ageGroup, setAgeGroup] = useState("");
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(e.currentTarget);
 
     try {
       const response = await fetch("/api/reservations", {
@@ -84,19 +84,19 @@ export function ReservationForm({
           ageGroup,
           message: formData.get("message") || undefined,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "예약에 실패했습니다.")
+        throw new Error(data.error || "예약에 실패했습니다.");
       }
 
-      setSubmitted(true)
+      setSubmitted(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "예약에 실패했습니다.")
+      setError(err instanceof Error ? err.message : "예약에 실패했습니다.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -115,7 +115,9 @@ export function ReservationForm({
           </p>
         </div>
         <div className="w-full max-w-sm space-y-2 rounded-xl bg-secondary px-6 py-5 text-sm text-left">
-          <p className="font-semibold text-secondary-foreground">{programTitle}</p>
+          <p className="font-semibold text-secondary-foreground">
+            {programTitle}
+          </p>
           {date && (
             <p className="text-muted-foreground">
               {"희망 일자: "}
@@ -123,24 +125,25 @@ export function ReservationForm({
             </p>
           )}
           <p className="text-muted-foreground">
-            {"장소: "}{programTitle}
+            {"장소: "}
+            {programTitle}
           </p>
         </div>
         <Button
           variant="outline"
           onClick={() => {
-            setSubmitted(false)
-            setDate(undefined)
-            setGender("")
-            setAgeGroup("")
-            setPrivacyAgreed(false)
+            setSubmitted(false);
+            setDate(undefined);
+            setGender("");
+            setAgeGroup("");
+            setPrivacyAgreed(false);
           }}
           className="mt-2"
         >
           {"다시 예약하기"}
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -193,8 +196,8 @@ export function ReservationForm({
                   mode="single"
                   selected={date}
                   onSelect={(d) => {
-                    setDate(d)
-                    setDateOpen(false)
+                    setDate(d);
+                    setDateOpen(false);
                   }}
                   locale={ko}
                   disabled={{ before: new Date() }}
@@ -225,7 +228,10 @@ export function ReservationForm({
         </p>
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="name" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Label
+              htmlFor="name"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground"
+            >
               <User className="h-3.5 w-3.5" />
               {"이름"}
               <span className="text-destructive">{"*"}</span>
@@ -239,7 +245,10 @@ export function ReservationForm({
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="phone" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Label
+              htmlFor="phone"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground"
+            >
               <Phone className="h-3.5 w-3.5" />
               {"연락처"}
               <span className="text-destructive">{"*"}</span>
@@ -254,7 +263,10 @@ export function ReservationForm({
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="email" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Label
+              htmlFor="email"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground"
+            >
               <Mail className="h-3.5 w-3.5" />
               {"이메일"}
             </Label>
@@ -267,7 +279,10 @@ export function ReservationForm({
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="participants" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Label
+              htmlFor="participants"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground"
+            >
               <Users className="h-3.5 w-3.5" />
               {"참가 인원"}
               <span className="text-destructive">{"*"}</span>
@@ -325,7 +340,10 @@ export function ReservationForm({
 
       {/* Message */}
       <div className="flex flex-col gap-2">
-        <Label htmlFor="message" className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <Label
+          htmlFor="message"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground"
+        >
           <MessageSquare className="h-3.5 w-3.5" />
           {"요청사항 / 메모"}
         </Label>
@@ -347,23 +365,52 @@ export function ReservationForm({
             onCheckedChange={(checked) => setPrivacyAgreed(checked === true)}
             className="mt-0.5"
           />
-          <Label htmlFor="privacy" className="text-sm font-medium leading-relaxed text-foreground cursor-pointer">
+          <Label
+            htmlFor="privacy"
+            className="text-sm font-medium leading-relaxed text-foreground cursor-pointer"
+          >
             {"[필수] 개인정보 수집 및 이용에 동의합니다."}
           </Label>
         </div>
         <div className="rounded-lg border border-border bg-card p-4 text-xs leading-relaxed text-muted-foreground max-h-40 overflow-y-auto">
-          <p className="mb-2 font-semibold text-foreground">{"개인정보 수집 및 이용 동의서"}</p>
+          <p className="mb-2 font-semibold text-foreground">
+            {"개인정보 수집 및 이용 동의서"}
+          </p>
           <p className="mb-2">
-            {"큐어포레스트(CureForest)는 산림치유 프로그램 예약 서비스 제공을 위해 아래와 같이 개인정보를 수집 및 이용합니다."}
+            {
+              "큐어포레스트(CureForest)는 산림치유 프로그램 예약 서비스 제공을 위해 아래와 같이 개인정보를 수집 및 이용합니다."
+            }
           </p>
           <p className="mb-1 font-semibold text-foreground">{"1. 수집 항목"}</p>
-          <p className="mb-2">{"이름, 연락처, 이메일, 성별, 나이대, 참가 인원, 희망 날짜, 장소, 요청사항"}</p>
-          <p className="mb-1 font-semibold text-foreground">{"2. 수집 및 이용 목적"}</p>
-          <p className="mb-2">{"산림치유 프로그램 예약 접수 및 확인, 예약 ��련 안내 및 연락, 프로그램 운영 및 참가자 관리"}</p>
-          <p className="mb-1 font-semibold text-foreground">{"3. 보유 및 이용 기간"}</p>
-          <p className="mb-2">{"예약 완료 후 1년간 보유하며, 이후 지체 없이 파기합니다. 단, 관계 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관합니다."}</p>
-          <p className="mb-1 font-semibold text-foreground">{"4. 동의 거부권 및 불이익"}</p>
-          <p>{"귀하는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부하실 경우 프로그램 예약 서비스 이용이 제한됩니다."}</p>
+          <p className="mb-2">
+            {
+              "이름, 연락처, 이메일, 성별, 나이대, 참가 인원, 희망 날짜, 장소, 요청사항"
+            }
+          </p>
+          <p className="mb-1 font-semibold text-foreground">
+            {"2. 수집 및 이용 목적"}
+          </p>
+          <p className="mb-2">
+            {
+              "산림치유 프로그램 예약 접수 및 확인, 예약 관련 안내 및 연락, 프로그램 운영 및 참가자 관리"
+            }
+          </p>
+          <p className="mb-1 font-semibold text-foreground">
+            {"3. 보유 및 이용 기간"}
+          </p>
+          <p className="mb-2">
+            {
+              "예약 완료 후 1년간 보유하며, 이후 지체 없이 파기합니다. 단, 관계 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관합니다."
+            }
+          </p>
+          <p className="mb-1 font-semibold text-foreground">
+            {"4. 동의 거부권 및 불이익"}
+          </p>
+          <p>
+            {
+              "귀하는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부하실 경우 프로그램 예약 서비스 이용이 제한됩니다."
+            }
+          </p>
         </div>
       </div>
 
@@ -390,10 +437,13 @@ export function ReservationForm({
       <p className="text-center text-xs leading-relaxed text-muted-foreground">
         {"예약 접수 후 담당 산림치유지도사가 확인하여 연락드립니다. "}
         {"문의: "}
-        <a href="mailto:cureforest@naver.com" className="text-primary underline">
+        <a
+          href="mailto:cureforest@naver.com"
+          className="text-primary underline"
+        >
           cureforest@naver.com
         </a>
       </p>
     </form>
-  )
+  );
 }

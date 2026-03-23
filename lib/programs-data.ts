@@ -1,8 +1,15 @@
-import { Music, Palette, Heart, Dumbbell, Sparkles, Coffee } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
+import {
+  Music,
+  Palette,
+  Heart,
+  Dumbbell,
+  Sparkles,
+  Coffee,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export function getProgramBySlug(slug: string): Program | null {
-  return programs.find((p) => p.slug === slug) || null
+  return programs.find((p) => p.slug === slug) || null;
 }
 
 export interface SubProgram {
@@ -169,7 +176,7 @@ export const programs: Program[] = [
         title: "1:1 개인 세션",
         description: "개인 맞춤형 싱잉볼 테라피",
         fullDescription:
-          "개인의 상태와 필요에 맞춤화된 1:1 싱잉볼 세션입니다. 사전 상담을 통해 현재 몸과 마음의 상태를 파악하고, ��에 맞는 싱잉볼과 기법을 적용합니다.",
+          "개인의 상태와 필요에 맞춤화된 1:1 싱잉볼 세션입니다. 사전 상담을 통해 현재 몸과 마음의 상태를 파악하고, 이에 맞는 싱잉볼과 기법을 적용합니다.",
         duration: "60분",
         target: "깊은 치유가 필요한 분",
         image: "/images/sub-personal-session.jpg",
@@ -196,7 +203,7 @@ export const programs: Program[] = [
       },
       {
         question: "세션 중 잠이 들어도 되나요?",
-        answer: "네, 깊은 이완 상태에서 잠이 드는 것��� 자��스러운 현상입니다.",
+        answer: "네, 깊은 이완 상태에서 잠이 드는 것은 자연스러운 현상입니다.",
       },
     ],
   },
@@ -381,12 +388,12 @@ export const programs: Program[] = [
       {
         question: "비가 오면 어떻게 되나요?",
         answer:
-          "우천 시에는 실내 ���간에서 대체 프로그램을 진행하거나 일정을 조정합니다.",
+          "우천 시에는 실내 공간에서 대체 프로그램을 진행하거나 일정을 조정합니다.",
       },
       {
         question: "노르딕 워킹 폴은 어디서 구하나요?",
         answer:
-          "프로그램에서 폴을 대여해드립니다. 구매�� 원하시면 안내해드립니다.",
+          "프로그램에서 폴을 대여해드립니다. 구매를 원하시면 안내해드립니다.",
       },
     ],
   },
@@ -492,18 +499,26 @@ export const programs: Program[] = [
     steps: [
       { title: "차 소개", description: "오늘 사용할 차의 종류와 효능 설명" },
       { title: "다구 준비", description: "찻잔과 다구를 정성껏 준비하기" },
-      { title: "차 우리기", description: "물 온도와 우리는 시간에 집중하며 천천히 차 우리기" },
-      { title: "차 명상", description: "차의 색·향·맛을 온전히 느끼며 마음챙김 실천" },
+      {
+        title: "차 우리기",
+        description: "물 온도와 우리는 시간에 집중하며 천천히 차 우리기",
+      },
+      {
+        title: "차 명상",
+        description: "차의 색·향·맛을 온전히 느끼며 마음챙김 실천",
+      },
     ],
     subPrograms: [],
     faqs: [
       {
         question: "차를 잘 못 마셔도 괜찮나요?",
-        answer: "물론입니다. 카페인이 없는 허브차나 야생화차도 준비되어 있어 누구나 참여할 수 있습니다.",
+        answer:
+          "물론입니다. 카페인이 없는 허브차나 야생화차도 준비되어 있어 누구나 참여할 수 있습니다.",
       },
       {
         question: "다도 경험이 없어도 참여할 수 있나요?",
-        answer: "네, 전문 지도사가 처음부터 차근차근 안내해드리므로 전혀 경험이 없어도 괜찮습니다.",
+        answer:
+          "네, 전문 지도사가 처음부터 차근차근 안내해드리므로 전혀 경험이 없어도 괜찮습니다.",
       },
       {
         question: "야외 진행 시 날씨가 좋지 않으면 어떻게 되나요?",
